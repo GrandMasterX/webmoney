@@ -1,0 +1,26 @@
+{
+    "name": "grandmasterx/webmoney",
+    "description": "WebMoney API PHP Library",
+    "keywords": ["webmoney", "megastock", "capitaller", "WMXI", "WMSigner"],
+    "license": "BSD-3-Clause",
+    "homepage": "http://github.com/grandmasterx/webmoney",
+    "authors": [
+        {
+            "name": "GrandMasterX",
+            "email": "zgrandmasterz@gmail.com",
+            "homepage": "https://github.com/grandmasterx/webmoney"
+        }
+    ],
+    "require": {
+        "php": ">=5.6"
+    },
+    "autoload": {
+        "psr-4": { "grandmasterx\\WebMoney\\": "src/" }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ]
+}
