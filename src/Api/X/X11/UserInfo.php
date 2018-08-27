@@ -4,6 +4,7 @@ namespace grandmasterx\WebMoney\Api\X\X11;
 
 class UserInfo
 {
+    
     /** @var int ctype */
     private $legalStatus;
 

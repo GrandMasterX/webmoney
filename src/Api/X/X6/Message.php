@@ -4,6 +4,7 @@ namespace grandmasterx\WebMoney\Api\X\X6;
 
 class Message
 {
+    
     /** @var string message\receiverwmid */
     protected $recipientWmid;
 

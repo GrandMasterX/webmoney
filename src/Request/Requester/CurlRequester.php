@@ -2,12 +2,12 @@
 
 namespace grandmasterx\WebMoney\Request\Requester;
 
-use grandmasterx\WebMoney\Api\ATM\Request as ATMRequest;
-use grandmasterx\WebMoney\Api\WMC\Request as WMCRequest;
+use grandmasterx\WebMoney\Request\XmlRequest;
+use grandmasterx\WebMoney\Request\AbstractRequest;
 use grandmasterx\WebMoney\Api\X\Request as XRequest;
 use grandmasterx\WebMoney\Exception\RequesterException;
-use grandmasterx\WebMoney\Request\AbstractRequest;
-use grandmasterx\WebMoney\Request\XmlRequest;
+use grandmasterx\WebMoney\Api\ATM\Request as ATMRequest;
+use grandmasterx\WebMoney\Api\WMC\Request as WMCRequest;
 
 class CurlRequester extends AbstractRequester
 {
@@ -63,10 +63,13 @@ class CurlRequester extends AbstractRequester
         }
 
         ob_start();
+
         if (!curl_exec($handler)) {
             throw new RequesterException('Error while performing request (' . curl_error($handler) . ')');
         }
+
         $content = ob_get_contents();
+        
         ob_end_clean();
         curl_close($handler);
 

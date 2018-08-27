@@ -3,9 +3,9 @@
 namespace grandmasterx\WebMoney\Api\X\X17\CreateContract;
 
 use grandmasterx\WebMoney\Api\X;
+use grandmasterx\WebMoney\Signer;
 use grandmasterx\WebMoney\Exception\ApiException;
 use grandmasterx\WebMoney\Request\RequestValidator;
-use grandmasterx\WebMoney\Signer;
 
 /**
  * Class Request
@@ -14,7 +14,9 @@ use grandmasterx\WebMoney\Signer;
  */
 class Request extends X\Request
 {
+
     const CONTRACT_TYPE_OPEN_ACCESS = 1;
+
     const CONTRACT_TYPE_RESTRICTED_ACCESS = 2;
 
     /** @var string name */
@@ -45,13 +47,10 @@ class Request extends X\Request
      */
     protected function getValidationRules()
     {
-        return array(
-                RequestValidator::TYPE_REQUIRED => array('contractName', 'contractType', 'contractText',
-                                                         'accessListWmids'),
-                RequestValidator::TYPE_DEPEND_REQUIRED => array(
-                        'signerWmid' => array('authType' => array(self::AUTH_CLASSIC)),
-                ),
-        );
+        return [
+            RequestValidator::TYPE_REQUIRED => ['contractName', 'contractType', 'contractText', 'accessListWmids'],
+            RequestValidator::TYPE_DEPEND_REQUIRED => ['signerWmid' => ['authType' => [self::AUTH_CLASSIC]]]
+        ];
     }
 
     /**
@@ -91,12 +90,13 @@ class Request extends X\Request
      */
     public function sign(Signer $requestSigner = null)
     {
+        $params = [
+            $this->signerWmid,
+            mb_strlen($this->contractName, 'UTF-8'),
+            $this->contractType
+        ];
         if ($this->authType === self::AUTH_CLASSIC) {
-            $this->signature = $requestSigner->sign(
-                    $this->signerWmid
-                    . mb_strlen($this->contractName, 'UTF-8')
-                    . $this->contractType
-            );
+            $this->signature = $requestSigner->sign(implode('', $params));
         }
     }
 

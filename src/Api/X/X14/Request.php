@@ -3,9 +3,9 @@
 namespace grandmasterx\WebMoney\Api\X\X14;
 
 use grandmasterx\WebMoney\Api\X;
+use grandmasterx\WebMoney\Signer;
 use grandmasterx\WebMoney\Exception\ApiException;
 use grandmasterx\WebMoney\Request\RequestValidator;
-use grandmasterx\WebMoney\Signer;
 
 /**
  * Class Request
@@ -14,6 +14,7 @@ use grandmasterx\WebMoney\Signer;
  */
 class Request extends X\Request
 {
+
     /** @var string trans\inwmtranid */
     protected $transactionId;
 
@@ -32,11 +33,9 @@ class Request extends X\Request
             case self::AUTH_CLASSIC:
                 $this->url = 'https://w3s.webmoney.ru/asp/XMLTransMoneyback.asp';
                 break;
-
             case self::AUTH_LIGHT:
                 $this->url = 'https://w3s.wmtransfer.com/asp/XMLTransMoneybackCert.asp';
                 break;
-
             default:
                 throw new ApiException('This interface doesn\'t support the authentication type given.');
         }
@@ -49,9 +48,9 @@ class Request extends X\Request
      */
     protected function getValidationRules()
     {
-        return array(
-                RequestValidator::TYPE_REQUIRED => array('transactionId', 'amount'),
-        );
+        return [
+            RequestValidator::TYPE_REQUIRED => ['transactionId', 'amount']
+        ];
     }
 
     /**
@@ -88,8 +87,13 @@ class Request extends X\Request
      */
     public function sign(Signer $requestSigner = null)
     {
+        $params = [
+            $this->requestNumber,
+            $this->transactionId,
+            $this->amount
+        ];
         if ($this->authType === self::AUTH_CLASSIC) {
-            $this->signature = $requestSigner->sign($this->requestNumber . $this->transactionId . $this->amount);
+            $this->signature = $requestSigner->sign(implode('', $params));
         }
     }
 

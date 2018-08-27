@@ -3,9 +3,9 @@
 namespace grandmasterx\WebMoney\Api\X\X15\Get;
 
 use grandmasterx\WebMoney\Api\X;
+use grandmasterx\WebMoney\Signer;
 use grandmasterx\WebMoney\Exception\ApiException;
 use grandmasterx\WebMoney\Request\RequestValidator;
-use grandmasterx\WebMoney\Signer;
 
 /**
  * Class Request
@@ -14,12 +14,13 @@ use grandmasterx\WebMoney\Signer;
  */
 class Request extends X\Request
 {
+
     /** @var string gettrustlist/wmid */
     protected $requestedWmid;
 
     public function __construct($authType = self::AUTH_CLASSIC)
     {
-        if (!in_array($authType, array(self::AUTH_CLASSIC, self::AUTH_LIGHT))) {
+        if (!in_array($authType, [self::AUTH_CLASSIC, self::AUTH_LIGHT])) {
             throw new ApiException('This interface doesn\'t support the authentication type given.');
         }
 
@@ -59,8 +60,12 @@ class Request extends X\Request
      */
     public function sign(Signer $requestSigner = null)
     {
+        $params = [
+            $this->requestedWmid,
+            $this->requestNumber
+        ];
         if ($this->authType === self::AUTH_CLASSIC) {
-            $this->signature = $requestSigner->sign($this->requestedWmid . $this->requestNumber);
+            $this->signature = $requestSigner->sign(implode('', $params));
         }
     }
 
@@ -69,12 +74,10 @@ class Request extends X\Request
      */
     protected function getValidationRules()
     {
-        return array(
-                RequestValidator::TYPE_REQUIRED => array('requestedWmid'),
-                RequestValidator::TYPE_DEPEND_REQUIRED => array(
-                        'signerWmid' => array('authType' => array(self::AUTH_CLASSIC)),
-                ),
-        );
+        return [
+            RequestValidator::TYPE_REQUIRED => ['requestedWmid'],
+            RequestValidator::TYPE_DEPEND_REQUIRED => ['signerWmid' => ['authType' => [self::AUTH_CLASSIC]]]
+        ];
     }
 
     /**

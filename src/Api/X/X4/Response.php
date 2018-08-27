@@ -11,16 +11,16 @@ use grandmasterx\WebMoney\Request\AbstractResponse;
  */
 class Response extends AbstractResponse
 {
+
     /** @var int reqn */
     protected $requestNumber;
 
     /** @var Invoice[] outinvoices */
-    protected $invoices = array();
+    protected $invoices = [];
 
     public function __construct($response)
     {
         parent::__construct($response);
-
         $responseSimpleXml = new \SimpleXMLElement($response);
         $this->requestNumber = (int)$responseSimpleXml->reqn;
         $this->returnCode = (int)$responseSimpleXml->retval;
@@ -34,22 +34,22 @@ class Response extends AbstractResponse
 
     protected function invoiceSimpleXmlToArray($simpleXml)
     {
-        return array(
-                'id' => (int)$simpleXml['id'],
-                'orderId' => (string)$simpleXml->orderid,
-                'customerWmid' => (string)$simpleXml->customerwmid,
-                'purse' => (string)$simpleXml->storepurse,
-                'amount' => (float)$simpleXml->amount,
-                'description' => (string)$simpleXml->desc,
-                'address' => (string)$simpleXml->address,
-                'protectionPeriod' => (int)$simpleXml->period,
-                'expiration' => (int)$simpleXml->expiration,
-                'status' => (int)$simpleXml->state,
-                'createDateTime' => self::createDateTime((string)$simpleXml->datecrt),
-                'updateDateTime' => self::createDateTime((string)$simpleXml->dateupd),
-                'transactionId' => (int)$simpleXml->wmtranid,
-                'customerPurse' => (string)$simpleXml->customerpurse,
-        );
+        return [
+            'id' => (int)$simpleXml['id'],
+            'orderId' => (string)$simpleXml->orderid,
+            'customerWmid' => (string)$simpleXml->customerwmid,
+            'purse' => (string)$simpleXml->storepurse,
+            'amount' => (float)$simpleXml->amount,
+            'description' => (string)$simpleXml->desc,
+            'address' => (string)$simpleXml->address,
+            'protectionPeriod' => (int)$simpleXml->period,
+            'expiration' => (int)$simpleXml->expiration,
+            'status' => (int)$simpleXml->state,
+            'createDateTime' => self::createDateTime((string)$simpleXml->datecrt),
+            'updateDateTime' => self::createDateTime((string)$simpleXml->dateupd),
+            'transactionId' => (int)$simpleXml->wmtranid,
+            'customerPurse' => (string)$simpleXml->customerpurse
+        ];
     }
 
     /**

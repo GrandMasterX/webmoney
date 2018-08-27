@@ -4,6 +4,7 @@ namespace grandmasterx\WebMoney\Api\X\X11;
 
 class Passport
 {
+    
     /** @var int cid */
     private $id;
 

@@ -11,6 +11,7 @@ use grandmasterx\WebMoney\Request\AbstractResponse;
  */
 class Response extends AbstractResponse
 {
+
     /** @var int reqn */
     protected $requestNumber;
 
@@ -29,10 +30,10 @@ class Response extends AbstractResponse
         $this->returnCode = (int)$responseObject->retval;
         $this->returnDescription = (string)$responseObject->retdesc;
         $this->message = new Message(
-                (string)$responseObject->message->receiverwmid,
-                (string)$responseObject->message->msgsubj,
-                (string)$responseObject->message->msgtext,
-                self::createDateTime((string)$responseObject->message->datecrt)
+            (string)$responseObject->message->receiverwmid,
+            (string)$responseObject->message->msgsubj,
+            (string)$responseObject->message->msgtext,
+            self::createDateTime((string)$responseObject->message->datecrt)
         );
     }
 

@@ -11,6 +11,7 @@ use grandmasterx\WebMoney\Request\AbstractResponse;
  */
 class Response extends AbstractResponse
 {
+
     /** @var int fullaccess */
     protected $hasFullAccess;
 
@@ -30,7 +31,7 @@ class Response extends AbstractResponse
     protected $passport;
 
     /** @var Wmid[] certinfo/wmids */
-    protected $wmids = array();
+    protected $wmids = [];
 
     /** @var UserInfo certinfo/userinfo/value */
     protected $userInfo;

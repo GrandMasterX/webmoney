@@ -11,6 +11,7 @@ use grandmasterx\WebMoney\Request\AbstractResponse;
  */
 class Response extends AbstractResponse
 {
+
     /** @var int reqn */
     protected $requestNumber;
 
@@ -34,15 +35,15 @@ class Response extends AbstractResponse
 
     protected function purseToArray(\SimpleXMLElement $purse)
     {
-        return array(
-                'id' => (int)$purse['id'],
-                'pursename' => (string)$purse->pursename,
-                'amount' => (float)$purse->amount,
-                'desc' => (string)$purse->desc,
-                'outsideopen' => (string)$purse->outsideopen,
-                'lastintr' => (string)$purse->lastintr,
-                'lastouttr' => (string)$purse->lastouttr,
-        );
+        return [
+            'id' => (int)$purse['id'],
+            'pursename' => (string)$purse->pursename,
+            'amount' => (float)$purse->amount,
+            'desc' => (string)$purse->desc,
+            'outsideopen' => (string)$purse->outsideopen,
+            'lastintr' => (string)$purse->lastintr,
+            'lastouttr' => (string)$purse->lastouttr
+        ];
     }
 
     /**

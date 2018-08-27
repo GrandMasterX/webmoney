@@ -4,6 +4,7 @@ namespace grandmasterx\WebMoney\Api\X\X17\ContractInfo;
 
 class Acceptance
 {
+    
     /** @var int @contractid */
     protected $contractId;
 

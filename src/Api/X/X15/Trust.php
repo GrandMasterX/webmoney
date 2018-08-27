@@ -4,6 +4,7 @@ namespace grandmasterx\WebMoney\Api\X\X15;
 
 class Trust
 {
+    
     /** @var int trust/@id */
     protected $id;
 

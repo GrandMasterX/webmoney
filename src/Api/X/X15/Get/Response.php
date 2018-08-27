@@ -12,11 +12,12 @@ use grandmasterx\WebMoney\Request\AbstractResponse;
  */
 class Response extends AbstractResponse
 {
+
     /** @var int reqn */
     protected $requestNumber;
 
     /** @var Trust[] trustlist */
-    protected $trusts = array();
+    protected $trusts = [];
 
     public function __construct($response)
     {
@@ -36,25 +37,27 @@ class Response extends AbstractResponse
 
     protected function trustToArray(\SimpleXMLElement $trust)
     {
-        return array(
-                'id' => (int)$trust['id'],
-                'canIssueInvoice' => (int)$trust['inv'],
-                'canMakeTransfer' => (int)$trust['trans'],
-                'canCheckBalance' => (int)$trust['purse'],
-                'canViewHistory' => (int)$trust['transhist'],
-                'masterWmid' => (string)$trust->master,
-                'purse' => (string)$trust->purse,
-                '24hLimit' => $trust->daylimit,
-                'dayLimit' => $trust->dlimit,
-                'weekLimit' => $trust->wlimit,
-                'monthLimit' => $trust->mlimit,
-                'daySum' => $trust->dsum,
-                'weekSum' => $trust->wsum,
-                'monthSum' => $trust->msum,
-                'lastOperationDate' => \DateTime::createFromFormat('Y.m.d', (string)$trust->lastsumdate,
-                                                                   self::getTimeZone()),
-                'payeeWmid' => $trust->storeswmid,
-        );
+        return [
+            'id' => (int)$trust['id'],
+            'canIssueInvoice' => (int)$trust['inv'],
+            'canMakeTransfer' => (int)$trust['trans'],
+            'canCheckBalance' => (int)$trust['purse'],
+            'canViewHistory' => (int)$trust['transhist'],
+            'masterWmid' => (string)$trust->master,
+            'purse' => (string)$trust->purse,
+            '24hLimit' => $trust->daylimit,
+            'dayLimit' => $trust->dlimit,
+            'weekLimit' => $trust->wlimit,
+            'monthLimit' => $trust->mlimit,
+            'daySum' => $trust->dsum,
+            'weekSum' => $trust->wsum,
+            'monthSum' => $trust->msum,
+            'lastOperationDate' => \DateTime::createFromFormat(
+                'Y.m.d', (string)$trust->lastsumdate,
+                self::getTimeZone()
+            ),
+            'payeeWmid' => $trust->storeswmid
+        ];
     }
 
     /**

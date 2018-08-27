@@ -6,26 +6,41 @@ use grandmasterx\WebMoney\Request\AbstractResponse;
 
 class Response extends AbstractResponse
 {
+
     const PAYMENT_TYPE_USUAL = 0;
+
     const PAYMENT_TYPE_TELEPAT = 1;
+
     const PAYMENT_TYPE_PAYMER = 2;
+
     const PAYMENT_TYPE_CASHIER = 3;
+
     const PAYMENT_TYPE_SDP = 4;
 
     const TELEPAT_PAYMENT_TYPE_KEEPER_MOBILE = 0;
+
     const TELEPAT_PAYMENT_TYPE_SMS = 1;
+
     const TELEPAT_PAYMENT_TYPE_MOBILE_PAYMENT = 2;
 
     const PAYMER_PAYMENT_TYPE_CHECK_OR_WM_CARD = 0;
+
     const PAYMER_PAYMENT_TYPE_WM_NOTE = 1;
+
     const PAYMER_PAYMENT_TYPE_WEBMONEY_CHECK = 2;
 
     const SDP_TYPE_MONEY_TRANSFER = 0;
+
     const SDP_TYPE_ALFA_CLICK = 3;
+
     const SDP_TYPE_RU_CARD = 4;
+
     const SDP_TYPE_RUSSIAN_STANDARD = 5;
+
     const SDP_TYPE_VTB24 = 6;
+
     const SDP_TYPE_SBERBANK_THANK_YOU = 7;
+    
     const SDP_TYPE_UA_TERMINALS_AND_BANKS = 8;
 
     /** @var int */

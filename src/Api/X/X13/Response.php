@@ -11,8 +11,11 @@ use grandmasterx\WebMoney\Request\AbstractResponse;
  */
 class Response extends AbstractResponse
 {
+
     const STATUS_COMPLETED = 0;
+
     const STATUS_NOT_COMPLETED = 4;
+    
     const STATUS_REFUNDED = 12;
 
     /** @var int reqn */

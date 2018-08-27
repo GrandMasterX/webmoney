@@ -3,9 +3,9 @@
 namespace grandmasterx\WebMoney\Api\X\X5;
 
 use grandmasterx\WebMoney\Api\X;
+use grandmasterx\WebMoney\Signer;
 use grandmasterx\WebMoney\Exception\ApiException;
 use grandmasterx\WebMoney\Request\RequestValidator;
-use grandmasterx\WebMoney\Signer;
 
 /**
  * Class Request
@@ -14,6 +14,7 @@ use grandmasterx\WebMoney\Signer;
  */
 class Request extends X\Request
 {
+
     /** @var string finishprotect\wmtranid */
     protected $transactionId;
 
@@ -26,15 +27,12 @@ class Request extends X\Request
             case self::AUTH_CLASSIC:
                 $this->url = 'https://w3s.webmoney.ru/asp/XMLFinishProtect.asp';
                 break;
-
             case self::AUTH_LIGHT:
                 $this->url = 'https://w3s.wmtransfer.com/asp/XMLFinishProtectCert.asp';
                 break;
-
             default:
                 throw new ApiException('This interface doesn\'t support the authentication type given.');
         }
-
         parent::__construct($authType);
     }
 
@@ -62,12 +60,10 @@ class Request extends X\Request
      */
     protected function getValidationRules()
     {
-        return array(
-                RequestValidator::TYPE_REQUIRED => array('transactionId', 'protectionCode'),
-                RequestValidator::TYPE_DEPEND_REQUIRED => array(
-                        'signerWmid' => array('authType' => array(self::AUTH_CLASSIC)),
-                ),
-        );
+        return [
+            RequestValidator::TYPE_REQUIRED => ['transactionId', 'protectionCode'],
+            RequestValidator::TYPE_DEPEND_REQUIRED => ['signerWmid' => ['authType' => [self::AUTH_CLASSIC]]]
+        ];
     }
 
     /**

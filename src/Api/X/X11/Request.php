@@ -3,9 +3,9 @@
 namespace grandmasterx\WebMoney\Api\X\X11;
 
 use grandmasterx\WebMoney\Api\X;
+use grandmasterx\WebMoney\Signer;
 use grandmasterx\WebMoney\Exception\ApiException;
 use grandmasterx\WebMoney\Request\RequestValidator;
-use grandmasterx\WebMoney\Signer;
 
 /**
  * Class Request
@@ -14,13 +14,17 @@ use grandmasterx\WebMoney\Signer;
  */
 class Request extends X\Request
 {
+
     const DICT_SHOW = 1;
+
     const DICT_NOT_SHOW = 0;
 
     const INFO_SHOW = 1;
+
     const INFO_NOT_SHOW = 0;
 
     const MODE_CHECK = 1;
+
     const MODE_NOT_CHECK = 0;
 
     /** @var string passportwmid */
@@ -55,17 +59,15 @@ class Request extends X\Request
      */
     public function getValidationRules()
     {
-        return array(
-                RequestValidator::TYPE_REQUIRED => array('passportWmid', 'paramDict', 'paramInfo', 'paramMode'),
-                RequestValidator::TYPE_DEPEND_REQUIRED => array(
-                        'signerWmid' => array('authType' => array(self::AUTH_CLASSIC)),
-                ),
-                RequestValidator::TYPE_RANGE => array(
-                        'paramDict' => array(self::DICT_SHOW, self::DICT_NOT_SHOW),
-                        'paramInfo' => array(self::INFO_SHOW, self::INFO_NOT_SHOW),
-                        'paramMode' => array(self::MODE_CHECK, self::MODE_NOT_CHECK),
-                ),
-        );
+        return [
+            RequestValidator::TYPE_REQUIRED => ['passportWmid', 'paramDict', 'paramInfo', 'paramMode'],
+            RequestValidator::TYPE_DEPEND_REQUIRED => ['signerWmid' => ['authType' => [self::AUTH_CLASSIC]]],
+            RequestValidator::TYPE_RANGE => [
+                'paramDict' => [self::DICT_SHOW, self::DICT_NOT_SHOW],
+                'paramInfo' => [self::INFO_SHOW, self::INFO_NOT_SHOW],
+                'paramMode' => [self::MODE_CHECK, self::MODE_NOT_CHECK]
+            ]
+        ];
     }
 
     /**

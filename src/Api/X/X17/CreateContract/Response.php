@@ -11,6 +11,7 @@ use grandmasterx\WebMoney\Request\AbstractResponse;
  */
 class Response extends AbstractResponse
 {
+
     /** @var int contractid */
     protected $contractId;
 
@@ -20,7 +21,6 @@ class Response extends AbstractResponse
     public function __construct($response)
     {
         parent::__construct($response);
-
         $responseObject = new \SimpleXMLElement($response);
         $this->returnCode = (int)$responseObject->retval;
         $this->returnDescription = (string)$responseObject->retdesc;

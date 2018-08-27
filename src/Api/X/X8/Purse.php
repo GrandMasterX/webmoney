@@ -4,6 +4,7 @@ namespace grandmasterx\WebMoney\Api\X\X8;
 
 class Purse
 {
+    
     /** @var string purse */
     private $purse;
 

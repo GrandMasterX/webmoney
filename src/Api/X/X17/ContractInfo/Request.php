@@ -3,9 +3,9 @@
 namespace grandmasterx\WebMoney\Api\X\X17\ContractInfo;
 
 use grandmasterx\WebMoney\Api\X;
+use grandmasterx\WebMoney\Signer;
 use grandmasterx\WebMoney\Exception\ApiException;
 use grandmasterx\WebMoney\Request\RequestValidator;
-use grandmasterx\WebMoney\Signer;
 
 /**
  * Class Request
@@ -14,6 +14,7 @@ use grandmasterx\WebMoney\Signer;
  */
 class Request extends X\Request
 {
+
     const TYPE_ACCEPT_DATE = 'acceptdate';
 
     /** @var int contractid */
@@ -24,7 +25,7 @@ class Request extends X\Request
 
     public function __construct($authType = self::AUTH_CLASSIC)
     {
-        if (!in_array($authType, array(self::AUTH_CLASSIC, self::AUTH_LIGHT))) {
+        if (!in_array($authType, [self::AUTH_CLASSIC, self::AUTH_LIGHT])) {
             throw new ApiException('This interface doesn\'t support the authentication type given.');
         }
 
@@ -39,15 +40,11 @@ class Request extends X\Request
      */
     protected function getValidationRules()
     {
-        return array(
-                RequestValidator::TYPE_REQUIRED => array('contractId'),
-                RequestValidator::TYPE_DEPEND_REQUIRED => array(
-                        'signerWmid' => array('authType' => array(self::AUTH_CLASSIC)),
-                ),
-                RequestValidator::TYPE_RANGE => array(
-                        'type' => array(self::TYPE_ACCEPT_DATE),
-                ),
-        );
+        return [
+            RequestValidator::TYPE_REQUIRED => ['contractId'],
+            RequestValidator::TYPE_DEPEND_REQUIRED => ['signerWmid' => ['authType' => [self::AUTH_CLASSIC]]],
+            RequestValidator::TYPE_RANGE => ['type' => [self::TYPE_ACCEPT_DATE]]
+        ];
     }
 
     /**

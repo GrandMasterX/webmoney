@@ -4,6 +4,7 @@ namespace grandmasterx\WebMoney\Api\X\X11;
 
 class CheckLock
 {
+    
     /** @var string ctype */
     private $passportType;
 

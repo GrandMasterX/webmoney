@@ -3,9 +3,9 @@
 namespace grandmasterx\WebMoney\Api\X\X18;
 
 use grandmasterx\WebMoney\Api\X;
+use grandmasterx\WebMoney\Signer;
 use grandmasterx\WebMoney\Exception\ApiException;
 use grandmasterx\WebMoney\Request\RequestValidator;
-use grandmasterx\WebMoney\Signer;
 
 /**
  * Class Request
@@ -14,9 +14,13 @@ use grandmasterx\WebMoney\Signer;
  */
 class Request extends X\Request
 {
+
     const PAYMENT_NUMBER_TYPE_DEFAULT = 0;
+
     const PAYMENT_NUMBER_TYPE_ORDER = 1;
+
     const PAYMENT_NUMBER_TYPE_INVOICE = 2;
+
     const PAYMENT_NUMBER_TYPE_TRANSACTION = 3;
 
     /** @var string lmi_payee_purse */
@@ -45,8 +49,8 @@ class Request extends X\Request
     public function __construct($authType = self::AUTH_CLASSIC, $secretKey = null)
     {
         if (
-                $secretKey === null
-                && in_array($authType, array(self::AUTH_SHA256, self::AUTH_MD5, self::AUTH_SECRET_KEY))
+            $secretKey === null
+            && in_array($authType, [self::AUTH_SHA256, self::AUTH_MD5, self::AUTH_SECRET_KEY])
         ) {
             throw new ApiException('Secret key is required for this authentication type.');
         }
@@ -62,17 +66,17 @@ class Request extends X\Request
      */
     protected function getValidationRules()
     {
-        return array(
-                RequestValidator::TYPE_REQUIRED => array('signerWmid', 'payeePurse', 'paymentNumber'),
-                RequestValidator::TYPE_RANGE => array(
-                        'paymentNumberType' => array(
-                                self::PAYMENT_NUMBER_TYPE_DEFAULT,
-                                self::PAYMENT_NUMBER_TYPE_ORDER,
-                                self::PAYMENT_NUMBER_TYPE_INVOICE,
-                                self::PAYMENT_NUMBER_TYPE_TRANSACTION,
-                        ),
-                ),
-        );
+        return [
+            RequestValidator::TYPE_REQUIRED => ['signerWmid', 'payeePurse', 'paymentNumber'],
+            RequestValidator::TYPE_RANGE => [
+                'paymentNumberType' => [
+                    self::PAYMENT_NUMBER_TYPE_DEFAULT,
+                    self::PAYMENT_NUMBER_TYPE_ORDER,
+                    self::PAYMENT_NUMBER_TYPE_INVOICE,
+                    self::PAYMENT_NUMBER_TYPE_TRANSACTION
+                ]
+            ]
+        ];
     }
 
     /**
@@ -111,15 +115,18 @@ class Request extends X\Request
      */
     public function sign(Signer $requestSigner = null)
     {
+        $params = [
+            $this->signerWmid,
+            $this->payeePurse,
+            $this->paymentNumber,
+            $this->secretKey
+        ];
         if ($this->authType === self::AUTH_CLASSIC) {
             $this->signature = $requestSigner->sign($this->signerWmid . $this->payeePurse . $this->paymentNumber);
         } elseif ($this->authType === self::AUTH_SHA256) {
-            $this->sha256 = hash(
-                    'sha256',
-                    $this->signerWmid . $this->payeePurse . $this->paymentNumber . $this->secretKey
-            );
+            $this->sha256 = hash('sha256', implode('', $params));
         } elseif ($this->authType === self::AUTH_MD5) {
-            $this->md5 = md5($this->signerWmid . $this->payeePurse . $this->paymentNumber . $this->secretKey);
+            $this->md5 = md5(implode('', $params));
         }
     }
 

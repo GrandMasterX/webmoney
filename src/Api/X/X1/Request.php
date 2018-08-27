@@ -3,9 +3,9 @@
 namespace grandmasterx\WebMoney\Api\X\X1;
 
 use grandmasterx\WebMoney\Api\X;
+use grandmasterx\WebMoney\Signer;
 use grandmasterx\WebMoney\Exception\ApiException;
 use grandmasterx\WebMoney\Request\RequestValidator;
-use grandmasterx\WebMoney\Signer;
 
 /**
  * Class Request
@@ -14,6 +14,7 @@ use grandmasterx\WebMoney\Signer;
  */
 class Request extends X\Request
 {
+
     /** @var int invoice/orderid */
     protected $orderId;
 
@@ -58,7 +59,6 @@ class Request extends X\Request
             default:
                 throw new ApiException('This interface doesn\'t support the authentication type given.');
         }
-
         parent::__construct($authType);
     }
 
@@ -76,17 +76,19 @@ class Request extends X\Request
      */
     public function sign(Signer $requestSigner = null)
     {
+        $params = [
+            $this->orderId,
+            $this->customerWmid,
+            $this->purse,
+            $this->amount,
+            mb_convert_encoding($this->description, 'Windows-1251', 'UTF-8'),
+            $this->address,
+            $this->protectionPeriod,
+            $this->expiration,
+            $this->requestNumber
+        ];
         if ($this->authType === self::AUTH_CLASSIC) {
-            $this->signature = $requestSigner->sign(
-                    $this->orderId .
-                    $this->customerWmid .
-                    $this->purse .
-                    $this->amount .
-                    mb_convert_encoding($this->description, 'Windows-1251', 'UTF-8') .
-                    $this->address .
-                    $this->protectionPeriod .
-                    $this->expiration .
-                    $this->requestNumber);
+            $this->signature = $requestSigner->sign(implode('', $params));
         }
     }
 
@@ -95,13 +97,10 @@ class Request extends X\Request
      */
     protected function getValidationRules()
     {
-        return array(
-                RequestValidator::TYPE_REQUIRED => array('customerWmid', 'purse', 'amount', 'protectionPeriod',
-                                                         'expiration'),
-                RequestValidator::TYPE_DEPEND_REQUIRED => array(
-                        'signerWmid' => array('authType' => array(self::AUTH_CLASSIC)),
-                ),
-        );
+        return [
+            RequestValidator::TYPE_REQUIRED => ['customerWmid', 'purse', 'amount', 'protectionPeriod', 'expiration'],
+            RequestValidator::TYPE_DEPEND_REQUIRED => ['signerWmid' => ['authType' => [self::AUTH_CLASSIC]]]
+        ];
     }
 
     /**
@@ -126,7 +125,6 @@ class Request extends X\Request
         $xml .= self::xmlElement('lmi_shop_id', $this->shopId);
         $xml .= '</invoice>';
         $xml .= '</w3s.request>';
-
         return $xml;
     }
 

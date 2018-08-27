@@ -4,6 +4,7 @@ namespace grandmasterx\WebMoney\Api\X\X8;
 
 class Wmid
 {
+    
     /** @var string wmid */
     private $wmid;
 

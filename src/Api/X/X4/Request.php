@@ -4,8 +4,8 @@ namespace grandmasterx\WebMoney\Api\X\X4;
 
 use grandmasterx\WebMoney\Api\X;
 use grandmasterx\WebMoney\Signer;
-use grandmasterx\WebMoney\Request\RequestValidator;
 use grandmasterx\WebMoney\Exception\ApiException;
+use grandmasterx\WebMoney\Request\RequestValidator;
 
 /**
  * Class Request
@@ -14,6 +14,7 @@ use grandmasterx\WebMoney\Exception\ApiException;
  */
 class Request extends X\Request
 {
+
     /** @var string getoperations\purse */
     protected $purse;
 
@@ -68,12 +69,10 @@ class Request extends X\Request
      */
     protected function getValidationRules()
     {
-        return array(
-                RequestValidator::TYPE_REQUIRED => array('purse', 'startDateTime', 'endDateTime'),
-                RequestValidator::TYPE_DEPEND_REQUIRED => array(
-                        'signerWmid' => array('authType' => array(self::AUTH_CLASSIC)),
-                ),
-        );
+        return [
+            RequestValidator::TYPE_REQUIRED => ['purse', 'startDateTime', 'endDateTime'],
+            RequestValidator::TYPE_DEPEND_REQUIRED => ['signerWmid' => ['authType' => [self::AUTH_CLASSIC]]]
+        ];
     }
 
     /**
@@ -92,7 +91,6 @@ class Request extends X\Request
         $xml .= self::xmlElement('datefinish', $this->endDateTime->format('Ymd H:i:s'));
         $xml .= '</getoutinvoices>';
         $xml .= '</w3s.request>';
-
         return $xml;
     }
 

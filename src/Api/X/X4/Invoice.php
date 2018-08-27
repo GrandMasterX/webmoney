@@ -4,9 +4,13 @@ namespace grandmasterx\WebMoney\Api\X\X4;
 
 class Invoice
 {
+
     const STATUS_NOT_PAID = 0;
+
     const STATUS_PAID_WITH_PROTECTION = 1;
+
     const STATUS_PAID = 2;
+    
     const STATUS_DECLINED = 3;
 
     /** @var int @id */

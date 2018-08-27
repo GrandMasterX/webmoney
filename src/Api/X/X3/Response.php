@@ -53,23 +53,23 @@ class Response extends AbstractResponse
 
     protected function operationSimpleXmlToArray($simpleXml)
     {
-        $data = array(
-                'transactionId' => (int)$simpleXml['id'],
-                'payerPurse' => (string)$simpleXml->pursesrc,
-                'payeePurse' => (string)$simpleXml->pursedest,
-                'amount' => (float)$simpleXml->amount,
-                'fee' => (float)$simpleXml->comiss,
-                'status' => (string)$simpleXml->opertype,
-                'invoiceId' => (int)$simpleXml->wminvid,
-                'orderId' => (int)$simpleXml->orderid,
-                'transactionExternalId' => (int)$simpleXml->tranid,
-                'protectionPeriod' => (int)$simpleXml->period,
-                'description' => (string)$simpleXml->desc,
-                'createDateTime' => self::createDateTime((string)$simpleXml->datecrt),
-                'updateDateTime' => self::createDateTime((string)$simpleXml->dateupd),
-                'correspondentWmid' => (string)$simpleXml->corrwm,
-                'balance' => (float)$simpleXml->rest,
-        );
+        $data = [
+            'transactionId' => (int)$simpleXml['id'],
+            'payerPurse' => (string)$simpleXml->pursesrc,
+            'payeePurse' => (string)$simpleXml->pursedest,
+            'amount' => (float)$simpleXml->amount,
+            'fee' => (float)$simpleXml->comiss,
+            'status' => (string)$simpleXml->opertype,
+            'invoiceId' => (int)$simpleXml->wminvid,
+            'orderId' => (int)$simpleXml->orderid,
+            'transactionExternalId' => (int)$simpleXml->tranid,
+            'protectionPeriod' => (int)$simpleXml->period,
+            'description' => (string)$simpleXml->desc,
+            'createDateTime' => self::createDateTime((string)$simpleXml->datecrt),
+            'updateDateTime' => self::createDateTime((string)$simpleXml->dateupd),
+            'correspondentWmid' => (string)$simpleXml->corrwm,
+            'balance' => (float)$simpleXml->rest
+        ];
 
         if ($data['status'] != Operation::STATUS_COMPLETED) {
             $data['incomplete'] = isset($simpleXml->timelock);

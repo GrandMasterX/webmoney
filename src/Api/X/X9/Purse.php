@@ -4,6 +4,7 @@ namespace grandmasterx\WebMoney\Api\X\X9;
 
 class Purse
 {
+    
     /** @var int purse/@id */
     protected $id;
 

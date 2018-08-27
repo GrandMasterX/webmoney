@@ -3,9 +3,9 @@
 namespace grandmasterx\WebMoney\Api\X\X19;
 
 use grandmasterx\WebMoney\Api\X;
+use grandmasterx\WebMoney\Signer;
 use grandmasterx\WebMoney\Exception\ApiException;
 use grandmasterx\WebMoney\Request\RequestValidator;
-use grandmasterx\WebMoney\Signer;
 
 /**
  * Class Request
@@ -14,36 +14,56 @@ use grandmasterx\WebMoney\Signer;
  */
 class Request extends X\Request
 {
+
     const LANG_RU = 'ru';
+
     const LANG_EN = 'en';
 
     const TYPE_CASH = 1;
+
     const TYPE_TRANSFER = 2;
+
     const TYPE_BANK = 3;
+
     const TYPE_CARD = 4;
+
     const TYPE_EMONEY = 5;
+    
     const TYPE_SMS = 6;
+
     const TYPE_MOBILE = 7;
 
     /** @deprecated Use const TYPE_TRANSFER instead */
     const TYPE_SDP = self::TYPE_TRANSFER;
 
     const DIRECTION_OUTPUT = 1;
+
     const DIRECTION_INPUT = 2;
 
     const PURSE_WMZ = 'WMZ';
+
     const PURSE_WMR = 'WMR';
+
     const PURSE_WME = 'WME';
+
     const PURSE_WMU = 'WMU';
+
     const PURSE_WMB = 'WMB';
+
     const PURSE_WMY = 'WMY';
+    
     const PURSE_WMG = 'WMG';
 
     const EMONEY_RBKM = 'rbkmoney.ru';
+
     const EMONEY_PP = 'paypal.com';
+
     const EMONEY_SK = 'moneybookers.com';
+
     const EMONEY_QW = 'qiwi.ru';
+
     const EMONEY_YAM = 'money.yandex.ru';
+
     const EMONEY_ESP = 'easypay.by';
 
     /** @var string lang */
@@ -105,11 +125,9 @@ class Request extends X\Request
             case self::AUTH_CLASSIC:
                 $this->url = 'https://apipassport.webmoney.ru/XMLCheckUser.aspx';
                 break;
-
             case self::AUTH_LIGHT:
                 $this->url = 'https://apipassport.webmoney.ru/XMLCheckUserCert.aspx';
                 break;
-
             default:
                 throw new ApiException('This interface doesn\'t support the authentication type given.');
         }
@@ -123,41 +141,55 @@ class Request extends X\Request
     protected function getValidationRules()
     {
         return array(
-                RequestValidator::TYPE_REQUIRED => array('requestNumber', 'operationAmount', 'userWmid',
-                                                         'operationType', 'operationDirection', 'operationPurseType'),
-                RequestValidator::TYPE_DEPEND_REQUIRED => array(
-                        'signerWmid' => array('authType' => array(self::AUTH_CLASSIC)),
-                        'userPassportNum' => array('operationType' => array(self::TYPE_CASH)),
-                        'userFirstName' => array('operationType' => array(self::TYPE_CASH, self::TYPE_TRANSFER,
-                                                                          self::TYPE_BANK, self::TYPE_CARD)),
-                        'userLastName' => array('operationType' => array(self::TYPE_CASH, self::TYPE_TRANSFER,
-                                                                         self::TYPE_BANK, self::TYPE_CARD)),
-                        'userBankName' => array('operationType' => array(self::TYPE_BANK, self::TYPE_CARD)),
-                        'userBankAccount' => array('operationType' => array(self::TYPE_BANK)),
-                        'userCardNumber' => array('operationType' => array(self::TYPE_CARD)),
-                        'userEMoneyName' => array('operationType' => array(self::TYPE_EMONEY)),
-                        'userEMoneyId' => array('operationType' => array(self::TYPE_EMONEY)),
-                        'userPhone' => array('operationType' => array(self::TYPE_SMS, self::TYPE_MOBILE)),
-                ),
-                RequestValidator::TYPE_RANGE => array(
-                        'language' => array(self::LANG_RU, self::LANG_EN),
-                        'operationType' => array(self::TYPE_CASH, self::TYPE_TRANSFER, self::TYPE_BANK, self::TYPE_CARD,
-                                                 self::TYPE_EMONEY, self::TYPE_SMS, self::TYPE_MOBILE),
-                        'operationDirection' => array(self::DIRECTION_OUTPUT, self::DIRECTION_INPUT),
-                        'operationPurseType' => array(self::PURSE_WMZ, self::PURSE_WMR, self::PURSE_WME,
-                                                      self::PURSE_WMU, self::PURSE_WMB, self::PURSE_WMY,
-                                                      self::PURSE_WMG),
-                        'userEMoneyName' => array(self::EMONEY_RBKM, self::EMONEY_PP, self::EMONEY_SK, self::EMONEY_QW,
-                                                  self::EMONEY_YAM, self::EMONEY_ESP),
-                ),
-                RequestValidator::TYPE_CONDITIONAL => array(
-                        'operationType' => array(
-                                array('value' => self::TYPE_SMS,
-                                      'conditional' => array('operationDirection' => self::DIRECTION_INPUT)),
-                                array('value' => self::TYPE_MOBILE,
-                                      'conditional' => array('operationDirection' => self::DIRECTION_OUTPUT))
-                        ),
-                ),
+                RequestValidator::TYPE_REQUIRED => [
+                    'requestNumber', 'operationAmount', 'userWmid','operationType',
+                    'operationDirection', 'operationPurseType'
+                ],
+                RequestValidator::TYPE_DEPEND_REQUIRED => [
+                    'signerWmid' => ['authType' => [self::AUTH_CLASSIC]],
+                    'userPassportNum' => ['operationType' => [self::TYPE_CASH]],
+                    'userFirstName' => [
+                        'operationType' => [
+                            self::TYPE_CASH, self::TYPE_TRANSFER, self::TYPE_BANK, self::TYPE_CARD
+                        ]
+                    ],
+                    'userLastName' => [
+                        'operationType' => [
+                            self::TYPE_CASH, self::TYPE_TRANSFER, self::TYPE_BANK, self::TYPE_CARD
+                        ]
+                    ],
+                    'userBankName' => ['operationType' => [self::TYPE_BANK, self::TYPE_CARD]],
+                    'userBankAccount' => ['operationType' => [self::TYPE_BANK]],
+                    'userCardNumber' => ['operationType' => [self::TYPE_CARD]],
+                    'userEMoneyName' => ['operationType' => [self::TYPE_EMONEY]],
+                    'userEMoneyId' => ['operationType' => [self::TYPE_EMONEY]],
+                    'userPhone' => ['operationType' => [self::TYPE_SMS, self::TYPE_MOBILE]]
+                ],
+                RequestValidator::TYPE_RANGE => [
+                    'language' => [self::LANG_RU, self::LANG_EN],
+                    'operationType' => [
+                        self::TYPE_CASH, self::TYPE_TRANSFER, self::TYPE_BANK,
+                        self::TYPE_CARD, self::TYPE_EMONEY, self::TYPE_SMS, self::TYPE_MOBILE
+                    ],
+                    'operationDirection' => [self::DIRECTION_OUTPUT, self::DIRECTION_INPUT],
+                    'operationPurseType' => [
+                        self::PURSE_WMZ, self::PURSE_WMR, self::PURSE_WME,
+                        self::PURSE_WMU, self::PURSE_WMB, self::PURSE_WMY, self::PURSE_WMG
+                    ],
+                    'userEMoneyName' => [
+                        self::EMONEY_RBKM, self::EMONEY_PP, self::EMONEY_SK,
+                        self::EMONEY_QW, self::EMONEY_YAM, self::EMONEY_ESP
+                    ]
+                ],
+                RequestValidator::TYPE_CONDITIONAL => [
+                    'operationType' => [
+                        ['value' => self::TYPE_SMS,'conditional' => ['operationDirection' => self::DIRECTION_INPUT]],
+                        [
+                            'value' => self::TYPE_MOBILE,
+                            'conditional' => ['operationDirection' => self::DIRECTION_OUTPUT]
+                        ]
+                    ]
+                ]
         );
     }
 
@@ -208,8 +240,13 @@ class Request extends X\Request
      */
     public function sign(Signer $requestSigner = null)
     {
+        $params= [
+            $this->requestNumber,
+            $this->operationType,
+            $this->userWmid
+        ];
         if ($this->authType === self::AUTH_CLASSIC) {
-            $this->signature = $requestSigner->sign($this->requestNumber . $this->operationType . $this->userWmid);
+            $this->signature = $requestSigner->sign(implode('', $params));
         }
     }
 

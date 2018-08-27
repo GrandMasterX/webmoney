@@ -4,8 +4,11 @@ namespace grandmasterx\WebMoney\Api\X\X3;
 
 class Operation
 {
+
     const STATUS_COMPLETED = 0;
+
     const STATUS_NOT_COMPLETED = 4;
+    
     const STATUS_REFUNDED = 12;
 
     /** @deprecated Use STATUS_COMPLETED instead */

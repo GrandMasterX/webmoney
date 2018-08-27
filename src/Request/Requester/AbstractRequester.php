@@ -26,7 +26,6 @@ abstract class AbstractRequester
     {
         $response = $this->request($request);
         $responseClassName = $request->getResponseClassName();
-
         return new $responseClassName($response);
     }
 

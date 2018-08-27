@@ -3,9 +3,9 @@
 namespace grandmasterx\WebMoney\Api\X\X2;
 
 use grandmasterx\WebMoney\Api\X;
+use grandmasterx\WebMoney\Signer;
 use grandmasterx\WebMoney\Exception\ApiException;
 use grandmasterx\WebMoney\Request\RequestValidator;
-use grandmasterx\WebMoney\Signer;
 
 /**
  * Class Request
@@ -14,6 +14,7 @@ use grandmasterx\WebMoney\Signer;
  */
 class Request extends X\Request
 {
+
     /** @var int trans/tranid */
     protected $transactionExternalId;
 
@@ -52,15 +53,12 @@ class Request extends X\Request
             case self::AUTH_CLASSIC:
                 $this->url = 'https://w3s.webmoney.ru/asp/XMLTrans.asp';
                 break;
-
             case self::AUTH_LIGHT:
                 $this->url = 'https://w3s.wmtransfer.com/asp/XMLTransCert.asp';
                 break;
-
             default:
                 throw new ApiException('This interface doesn\'t support the authentication type given.');
         }
-
         parent::__construct($authType);
     }
 
@@ -69,15 +67,10 @@ class Request extends X\Request
      */
     protected function getValidationRules()
     {
-        return array(
-                RequestValidator::TYPE_REQUIRED => array(
-                        'transactionExternalId', 'payerPurse', 'payeePurse', 'amount',
-                        'invoiceId', 'onlyAuth',
-                ),
-                RequestValidator::TYPE_DEPEND_REQUIRED => array(
-                        'signerWmid' => array('authType' => array(self::AUTH_CLASSIC)),
-                ),
-        );
+        return [
+            RequestValidator::TYPE_REQUIRED => ['transactionExternalId', 'payerPurse', 'payeePurse', 'amount', 'invoiceId', 'onlyAuth'],
+            RequestValidator::TYPE_DEPEND_REQUIRED => ['signerWmid' => ['authType' => [self::AUTH_CLASSIC]]]
+        ];
     }
 
     /**
@@ -101,7 +94,6 @@ class Request extends X\Request
         $xml .= self::xmlElement('onlyauth', (int)$this->onlyAuth);
         $xml .= '</trans>';
         $xml .= '</w3s.request>';
-
         return $xml;
     }
 
@@ -118,15 +110,19 @@ class Request extends X\Request
      */
     public function sign(Signer $requestSigner = null)
     {
+        $params = [
+            $this->requestNumber,
+            $this->transactionExternalId,
+            $this->payerPurse,
+            $this->payeePurse,
+            $this->amount,
+            $this->protectionPeriod,
+            $this->protectionCode,
+            mb_convert_encoding($this->description, 'Windows-1251', 'UTF-8'),
+            $this->invoiceId
+        ];
         if ($this->authType === self::AUTH_CLASSIC) {
-            $this->signature = $requestSigner->sign(
-                    $this->requestNumber . $this->transactionExternalId .
-                    $this->payerPurse . $this->payeePurse .
-                    $this->amount . $this->protectionPeriod .
-                    $this->protectionCode .
-                    mb_convert_encoding($this->description, 'Windows-1251', 'UTF-8') .
-                    $this->invoiceId
-            );
+            $this->signature = $requestSigner->sign(implode('', $params));
         }
     }
 

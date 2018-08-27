@@ -11,6 +11,7 @@ use grandmasterx\WebMoney\Request\AbstractResponse;
  */
 class Response extends AbstractResponse
 {
+    
     /** @var int reqn */
     protected $requestNumber;
 
